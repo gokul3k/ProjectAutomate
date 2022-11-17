@@ -1,9 +1,11 @@
 from PIL import Image
+from rembg import remove
 import os
 
 
 def editType():
-    editType = input("Enter type of resizing Static(1) or Dynamic(2) or QuickResize(3): ")
+    editType = input("Enter type Operation StaticResizing(1) or DynamicResizing(2) or QuickResize(3) or "
+                     "BackgroundRemoval(4): ")
     return editType
 
 
@@ -38,6 +40,31 @@ def quickResize(imageURL, current_folder, current_image, newSize):
 
 def fileSaving(new_image, current_folder, x):
     new_image.save(current_folder + '/' + x, 'JPEG', quality=100)
+
+
+def removeBackground(imageURL, current_folder, current_image):
+    new_image = remove(current_image)
+    fileName = current_folder.split('/')[-1]
+    print("Removed Background of: " + fileName)
+    new_image.save(imageURL + '/' + fileName, 'PNG', quality=100)
+
+
+def addBackground(imageURL, current_folder, current_image):
+
+    img = current_image.convert("RGBA")
+    datas = img.getdata()
+
+    newData = []
+    for item in datas:
+        if item[0] == 0 and item[1] == 0 and item[2] == 0:
+            newData.append((255, 255, 255, 255))
+        else:
+            newData.append(item)
+
+    img.putdata(newData)
+    fileName = current_folder.split('/')[-1]
+    print("Added white background: " + fileName)
+    img.save(imageURL + '/' + fileName, 'PNG', quality=100)
 
 
 eT = editType()
@@ -88,6 +115,16 @@ elif eT == '3':
         current_folder = imageURL + '/' + dir
         current_image = Image.open(current_folder)
         quickResize(imageURL, current_folder, current_image, newSize)
+elif eT == '4':
+    imageURL = input("Copy paste image folder url: ")
+    whiteBgAdd = input("Do you need to add white background? yes or no (case-sensitive): ")
+    for dir in os.listdir(imageURL):
+        if dir == '.DS_Store':
+            continue
+        current_folder = imageURL + '/' + dir
+        current_image = Image.open(current_folder)
+        removeBackground(imageURL, current_folder, current_image)
+        if whiteBgAdd == 'yes':
+            addBackground(imageURL, current_folder, current_image)
 
-
-print("Resizing is now completed successfully!")
+print("Image Processing is completed successfully!")
