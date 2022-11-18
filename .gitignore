@@ -6,6 +6,7 @@ __pycache__/
 #mac OS
 /.DS_Store
 /ImageTestingFolder
+/venv
 # C extensions
 *.so
 
