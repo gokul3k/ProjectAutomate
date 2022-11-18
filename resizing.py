@@ -5,7 +5,7 @@ import os
 
 def editType():
     editType = input("Enter type Operation StaticResizing(1) or DynamicResizing(2) or QuickResize(3) or "
-                     "BackgroundRemoval(4): ")
+                     "BackgroundRemoval(4) or Compress Image (5): ")
     return editType
 
 
@@ -50,10 +50,8 @@ def removeBackground(imageURL, current_folder, current_image):
 
 
 def addBackground(imageURL, current_folder, current_image):
-
     img = current_image.convert("RGBA")
     datas = img.getdata()
-
     newData = []
     for item in datas:
         if item[0] == 0 and item[1] == 0 and item[2] == 0:
@@ -65,6 +63,11 @@ def addBackground(imageURL, current_folder, current_image):
     fileName = current_folder.split('/')[-1]
     print("Added white background: " + fileName)
     img.save(imageURL + '/' + fileName, 'PNG', quality=100)
+
+
+def compress_img(imageURL, current_folder, current_image):
+    fileName = current_folder.split('/')[-1]
+    current_image.save(imageURL + '/' + fileName, optimize=True, quality=70)
 
 
 eT = editType()
@@ -126,5 +129,14 @@ elif eT == '4':
         removeBackground(imageURL, current_folder, current_image)
         if whiteBgAdd == 'yes':
             addBackground(imageURL, current_folder, current_image)
+
+elif eT == '5':
+    imageURL = input("Copy paste image folder url: ")
+    for dir in os.listdir(imageURL):
+        if dir == '.DS_Store':
+            continue
+        current_folder = imageURL + '/' + dir
+        current_image = Image.open(current_folder)
+        compress_img(imageURL, current_folder, current_image)
 
 print("Image Processing is completed successfully!")
