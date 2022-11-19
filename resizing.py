@@ -5,7 +5,7 @@ import os
 
 def editType():
     editType = input("Enter type Operation StaticResizing(1) or DynamicResizing(2) or QuickResize(3) or "
-                     "BackgroundRemoval(4) or Compress Image (5) or File Format Conversion (6):")
+                     "BackgroundRemoval(4) or Compress Image (5) or File Format Conversion (6) or file renaming (7):")
     return editType
 
 
@@ -71,11 +71,14 @@ def compress_img(imageURL, current_folder, current_image):
 
 
 def fileFormatConvertor(imageURL, current_folder, current_image, newExtension):
+        rgb_im = current_image.convert('RGB')
+        fileNameWithExtension = current_folder.split('/')[-1]
+        fileName = fileNameWithExtension.split('.')[0]
+        rgb_im.save(imageURL + '/' + fileName + '.' + newExtension, optimize=True, quality=70)
 
-    rgb_im = current_image.convert('RGB')
-    fileNameWithExtension = current_folder.split('/')[-1]
-    fileName = fileNameWithExtension.split('.')[0]
-    rgb_im.save(imageURL + '/' + fileName + '.' + newExtension, optimize=True, quality=70)
+
+def fileRenaming(imageURL, current_folder, current_image):
+    return
 
 
 eT = editType()
@@ -126,6 +129,7 @@ elif eT == '3':
         current_folder = imageURL + '/' + dir
         current_image = Image.open(current_folder)
         quickResize(imageURL, current_folder, current_image, newSize)
+
 elif eT == '4':
     imageURL = input("Copy paste image folder url: ")
     whiteBgAdd = input("Do you need to add white background? yes or no (case-sensitive): ")
@@ -149,13 +153,41 @@ elif eT == '5':
 
 elif eT == '6':
     imageURL = input("Copy paste image folder url: ")
-    newExtension = input("Choose output extension[jpeg, png, gif, tiff, pdf or WEBP]: ")
+    extensions = ['jpeg', 'jpg', 'png', 'gif', 'tiff', 'pdf', 'WEBP']
+    newExtension = input("Choose output extension[jpeg, jpg, png, gif, tiff, pdf or WEBP]: ")
+
+    if newExtension in extensions:
+        for dir in os.listdir(imageURL):
+            if dir == '.DS_Store':
+                continue
+            current_folder = imageURL + '/' + dir
+            try:
+                current_image = Image.open(current_folder)
+                fileFormatConvertor(imageURL, current_folder, current_image, newExtension)
+
+            except:
+                fileName = current_folder.split('/')[-1]
+                print("Error Processing: Check if the image is corrupted or file format is correct: " + fileName)
+    else:
+        print("The image format does not match to extensions listed. please try again.")
+        editType()
+
+elif eT == '7':
+    imageURL = input("Copy and paste url of folder containing all the images: ")
     for dir in os.listdir(imageURL):
         if dir == '.DS_Store':
             continue
+        print("on DIR:", dir)
         current_folder = imageURL + '/' + dir
-        current_image = Image.open(current_folder)
-        fileFormatConvertor(imageURL, current_folder, current_image, newExtension)
+        for x in os.listdir(current_folder):
+            if x == '.DS_Store':
+                continue
+            print(x)
+            imageList = current_folder + '/' + x
+            current_image = Image.open(imageList)
+            fileRenaming(imageURL, current_folder, current_image)
 
+else:
+    print("Please enter only the numeric value specified for each operation. please try again")
 
-print("Image Processing is completed successfully!")
+print("Image Processing is completed!")
