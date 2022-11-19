@@ -5,7 +5,7 @@ import os
 
 def editType():
     editType = input("Enter type Operation StaticResizing(1) or DynamicResizing(2) or QuickResize(3) or "
-                     "BackgroundRemoval(4) or Compress Image (5): ")
+                     "BackgroundRemoval(4) or Compress Image (5) or File Format Conversion (6):")
     return editType
 
 
@@ -68,6 +68,14 @@ def addBackground(imageURL, current_folder, current_image):
 def compress_img(imageURL, current_folder, current_image):
     fileName = current_folder.split('/')[-1]
     current_image.save(imageURL + '/' + fileName, optimize=True, quality=70)
+
+
+def fileFormatConvertor(imageURL, current_folder, current_image, newExtension):
+
+    rgb_im = current_image.convert('RGB')
+    fileNameWithExtension = current_folder.split('/')[-1]
+    fileName = fileNameWithExtension.split('.')[0]
+    rgb_im.save(imageURL + '/' + fileName + '.' + newExtension, optimize=True, quality=70)
 
 
 eT = editType()
@@ -138,5 +146,16 @@ elif eT == '5':
         current_folder = imageURL + '/' + dir
         current_image = Image.open(current_folder)
         compress_img(imageURL, current_folder, current_image)
+
+elif eT == '6':
+    imageURL = input("Copy paste image folder url: ")
+    newExtension = input("Choose output extension[jpeg, png, gif, tiff, pdf or WEBP]: ")
+    for dir in os.listdir(imageURL):
+        if dir == '.DS_Store':
+            continue
+        current_folder = imageURL + '/' + dir
+        current_image = Image.open(current_folder)
+        fileFormatConvertor(imageURL, current_folder, current_image, newExtension)
+
 
 print("Image Processing is completed successfully!")
