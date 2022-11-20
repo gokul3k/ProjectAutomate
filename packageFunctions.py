@@ -2,6 +2,7 @@ from rembg import remove
 from PIL import Image
 import os
 
+
 def editType():
     editType = input("Enter type Operation StaticResizing(1) or DynamicResizing(2) or QuickResize(3) or "
                      "BackgroundRemoval(4) or Compress Image (5) or File Format Conversion (6) or file renaming (7):")
@@ -66,16 +67,17 @@ def compress_img(imageURL, current_folder, current_image):
     fileName = current_folder.split('/')[-1]
     rgb_im = current_image.convert('RGB')
     rgb_im.save(imageURL + '/' + fileName, optimize=True, quality=70)
-    print("Compressed: ",fileName)
+    print("Compressed: ", fileName)
 
 
 def fileFormatConvertor(imageURL, current_folder, current_image, extension):
-        rgb_im = current_image.convert('RGB')
-        fileNameWithExtension = current_folder.split('/')[-1]
-        fileName = fileNameWithExtension.split('.')[0]
-        rgb_im.save(imageURL + '/' + fileName + '.' + extension, optimize=True, quality=70)
-        print("File Format changed: " + fileName + '.' + extension)
-        os.remove(current_folder)
+    rgb_im = current_image.convert('RGB')
+    fileNameWithExtension = current_folder.split('/')[-1]
+    fileName = fileNameWithExtension.split('.')[0]
+    rgb_im.save(imageURL + '/' + fileName + '.' + extension, optimize=True, quality=70)
+    print("File Format changed: " + fileName + '.' + extension)
+    os.remove(current_folder)
+
 
 def fileRenaming(imageList, current_folder, current_image, fileCount):
     f, e = os.path.splitext(imageList)
