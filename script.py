@@ -1,6 +1,7 @@
 import packageFunctions
 from PIL import Image
 import os
+import cv2 as cv
 
 eT = packageFunctions.editType()
 

@@ -1,6 +1,7 @@
 from rembg import remove
 from PIL import Image
 import os
+import cv2 as cv
 
 
 def editType():
@@ -43,8 +44,9 @@ def fileSaving(new_image, current_folder, x):
 def removeBackground(imageURL, current_folder, current_image):
     new_image = remove(current_image)
     fileName = current_folder.split('/')[-1]
+    removedExtension = fileName.split('.',1)[0]
     print("Removed Background of: " + fileName)
-    new_image.save(imageURL + '/' + fileName, 'PNG', quality=100)
+    new_image.save(imageURL + '/' + removedExtension + '.png', 'PNG', quality=100)
 
 
 def addBackground(imageURL, current_folder, current_image):
