@@ -37,6 +37,8 @@ class BackgroundEditor():
             current_directory = Path(parent_folder_path) / image_directory
 
             for image_name in sorted(os.listdir(current_directory)):
+                if(image_name == ".DS_Store"):
+                    continue
                 image_path = current_directory / image_name 
                 image_data = Image.open(image_path)
                 if(operation == "remove"):

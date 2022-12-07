@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 class ImageResizer():
     
     def _file_saving(self, new_image, file_path):
-        new_image.save(file_path, 'JPEG', quality=100)
+        new_image.save(file_path, 'PNG', quality=100)
         # return file_path 
 
     def _static_resize(self, current_image, width, height, x):
@@ -26,11 +26,13 @@ class ImageResizer():
 
 
     def run(self, tmp_folder_path, operation, width, height=None):
-        parent_folder_path = os.getcwd() / Path(tmp_folder_path) / os.listdir(tmp_folder_path)[0]
+        parent_folder_path = os.getcwd() / Path(tmp_folder_path) # os.listdir(tmp_folder_path)[0]
         for image_directory in sorted(os.listdir(parent_folder_path)):
             current_directory = Path(parent_folder_path) / image_directory
 
             for image_name in sorted(os.listdir(current_directory)):
+                if(image_name == ".DS_Store"):
+                    continue
                 image_path = current_directory / image_name
                 image_data = Image.open(os.path.expanduser(image_path))
                 if(operation == "static"):
